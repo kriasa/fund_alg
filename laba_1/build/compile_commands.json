@@ -1,0 +1,14 @@
+[
+{
+  "directory": "F:/2_kurs/1_sem/fund_alg/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe  @CMakeFiles/Laba.dir/includes_C.rsp -g -std=gnu11 -o CMakeFiles\\Laba.dir\\main.c.obj -c F:\\2_kurs\\1_sem\\fund_alg\\main.c",
+  "file": "F:/2_kurs/1_sem/fund_alg/main.c",
+  "output": "CMakeFiles/Laba.dir/main.c.obj"
+},
+{
+  "directory": "F:/2_kurs/1_sem/fund_alg/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe  @CMakeFiles/Laba.dir/includes_C.rsp -g -std=gnu11 -o CMakeFiles\\Laba.dir\\function.c.obj -c F:\\2_kurs\\1_sem\\fund_alg\\function.c",
+  "file": "F:/2_kurs/1_sem/fund_alg/function.c",
+  "output": "CMakeFiles/Laba.dir/function.c.obj"
+}
+]

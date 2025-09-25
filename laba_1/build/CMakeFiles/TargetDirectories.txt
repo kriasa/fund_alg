@@ -1,0 +1,3 @@
+F:/2_kurs/1_sem/fund_alg/build/CMakeFiles/Laba.dir
+F:/2_kurs/1_sem/fund_alg/build/CMakeFiles/edit_cache.dir
+F:/2_kurs/1_sem/fund_alg/build/CMakeFiles/rebuild_cache.dir
