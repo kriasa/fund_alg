@@ -47,8 +47,7 @@ int main() {
         printf("Error reading input path.\n");
         return EXIT_FAILURE;
     }
-    
-    // Убираем символ новой строки
+
     input_path[strcspn(input_path, "\n")] = '\0';
     
     printf("Enter output file path: ");
@@ -56,9 +55,13 @@ int main() {
         printf("Error reading output path.\n");
         return EXIT_FAILURE;
     }
-    
-    // Убираем символ новой строки
+
     output_path[strcspn(output_path, "\n")] = '\0';
+
+    if (strcmp(input_path, output_path) == 0) {
+        printf("Error: Input and output files must be different.\n");
+        return EXIT_FAILURE;
+    }
     
     StatusCode result = process_files(input_path, output_path);
     
