@@ -1,0 +1,11 @@
+This is a very long line that should be split into multiple lines of eighty
+characters each to demonstrate the work of the text formatting program according
+to the laboratory requirements.
+Short line.
+Another very long line with many words of different lengths for testing the
+algorithm of splitting text into fixed-length lines.
+Simple sentence.
+Another very long line containing many different words and symbols that will be
+used to check the correctness of the program when processing text data of
+different volume and structure.
+EOF

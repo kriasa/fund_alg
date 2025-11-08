@@ -1,0 +1,22 @@
+#ifndef ERROR_CODES_H
+#define ERROR_CODES_H
+
+typedef enum {
+    SCANF_SUCCESS = 0,
+    SCANF_EOF = -1,
+    SCANF_NO_MATCH = -2,
+    SCANF_INVALID_FORMAT = -3,
+    SCANF_MEMORY_ERROR = -4,
+    ROMAN_INVALID_CHAR = -10,
+    ROMAN_INVALID_SEQUENCE = -11,
+    ROMAN_OVERFLOW = -12,
+   
+    ZECK_INVALID_SEQUENCE = -20,
+    ZECK_OVERFLOW = -21,
+   
+    BASE_INVALID_CHAR = -30,
+    BASE_INVALID_RADIX = -31,
+    BASE_OVERFLOW = -32
+} scanf_status_t;
+
+#endif
