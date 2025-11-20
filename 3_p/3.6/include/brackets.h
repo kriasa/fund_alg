@@ -11,9 +11,10 @@ typedef enum {
     BRACKETS_NULL_PTR = 2,
     BRACKETS_MEMORY_ERROR = 3,
     BRACKETS_TOO_DEEP = 4,
-    BRACKETS_TOO_LONG = 5 
+    BRACKETS_TOO_LONG = 5,
+    BRACKETS_NO = 6
 } BracketsStatus;
 
-BracketsStatus check_brackets(const char *str, int *result);
+BracketsStatus check_brackets(const char *str);
 
 #endif

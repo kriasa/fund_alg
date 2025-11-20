@@ -6,15 +6,13 @@
 #define USER_INPUT_LENGTH 1000
 
 void process_input(const char *input) {
-    int result;
-    BracketsStatus status = check_brackets(input, &result);
+    BracketsStatus status = check_brackets(input);
     switch (status) {
         case BRACKETS_OK:
-            if (result) {
-                printf("сбалансированы\n");
-            } else {
-                printf("не сбалансированы\n");
-            }
+            printf("сбалансированы\n");
+            break;
+        case BRACKETS_NO:
+            printf("не сбалансированы\n");
             break;
         case BRACKETS_EMPTY_STRING:
             printf("пустая строка-сбалансирована\n");
@@ -44,7 +42,6 @@ int main(void) {
         printf(">> ");
         
         if (fgets(input, sizeof(input), stdin) == NULL) {
-
             break;
         }
         size_t len = strlen(input);

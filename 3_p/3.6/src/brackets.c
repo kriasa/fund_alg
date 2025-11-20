@@ -8,12 +8,14 @@ typedef struct {
     size_t size;
 } Stack;
 
-static Stack* stack_create(size_t initial_capacity) {
-    if (initial_capacity == 0) return NULL;
-    
+Stack* stack_create(size_t initial_capacity) {
+    if (initial_capacity == 0){ 
+        return NULL;
+    }
     Stack *stack = (Stack*)malloc(sizeof(Stack));
-    if (!stack) return NULL;
-    
+    if (!stack){ 
+        return NULL;
+    }
     stack->data = (char*)malloc(initial_capacity * sizeof(char));
     if (!stack->data) {
         free(stack);
@@ -25,7 +27,7 @@ static Stack* stack_create(size_t initial_capacity) {
     return stack;
 }
 
-static void stack_destroy(Stack *stack) {
+void stack_destroy(Stack *stack) {
     if (stack) {
         if (stack->data) {
             free(stack->data);
@@ -34,7 +36,7 @@ static void stack_destroy(Stack *stack) {
     }
 }
 
-static int stack_push(Stack *stack, char value) {
+int stack_push(Stack *stack, char value) {
     if (!stack || !stack->data) return 0;
     
     if (stack->size >= stack->capacity) {
@@ -53,7 +55,7 @@ static int stack_push(Stack *stack, char value) {
     return 1;
 }
 
-static int stack_pop(Stack *stack, char *value) {
+int stack_pop(Stack *stack, char *value) {
     if (!stack || !stack->data || !value || stack->size == 0) {
         return 0;
     }
@@ -61,34 +63,31 @@ static int stack_pop(Stack *stack, char *value) {
     return 1;
 }
 
-static int is_bracket(char c) {
+int is_bracket(char c) {
     return c == '(' || c == ')' || c == '[' || c == ']' || 
            c == '{' || c == '}' || c == '<' || c == '>';
 }
 
-static int are_matching_brackets(char open, char close) {
+int are_matching_brackets(char open, char close) {
     return (open == '(' && close == ')') ||
            (open == '[' && close == ']') ||
            (open == '{' && close == '}') ||
            (open == '<' && close == '>');
 }
 
-BracketsStatus check_brackets(const char *str, int *result) {
-    if (!str || !result) {
+BracketsStatus check_brackets(const char *str) {
+    
+    if (!str) {
         return BRACKETS_NULL_PTR;
     }
     
     if (str[0] == '\0') {
-        *result = 1;
         return BRACKETS_EMPTY_STRING;
     }
 
-    size_t len = 0;
-    while (str[len] != '\0') {
-        len++;
-        if (len > MAX_INPUT_LENGTH) {
-            return BRACKETS_TOO_LONG;
-        }
+    size_t len = strlen(str);
+    if (len > MAX_INPUT_LENGTH){
+        return BRACKETS_TOO_LONG;
     }
     
     Stack *stack = stack_create(16);
@@ -97,7 +96,6 @@ BracketsStatus check_brackets(const char *str, int *result) {
     }
     
     BracketsStatus status = BRACKETS_OK;
-    *result = 1;
     
     for (size_t i = 0; str[i] != '\0'; i++) {
         char current = str[i];
@@ -120,18 +118,19 @@ BracketsStatus check_brackets(const char *str, int *result) {
         else {
             char top;
             if (!stack_pop(stack, &top)) {
-                *result = 0;
+                status = BRACKETS_NO;
                 break;
             }
             
             if (!are_matching_brackets(top, current)) {
-                *result = 0;
+                status = BRACKETS_NO;
                 break;
             }
         }
     }
+    
     if (status == BRACKETS_OK && stack->size > 0) {
-        *result = 0;
+        status = BRACKETS_NO;
     }
     
     stack_destroy(stack);

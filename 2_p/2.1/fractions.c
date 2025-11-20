@@ -96,10 +96,10 @@ error_code_t double_to_rational(double x, Rational *result, double epsilon) {
         return ERROR_INVALID_RANGE;
     }
     if (x > 0.0 && x < epsilon * 10) {
-        return ERROR_TOO_CLOSE_TO_ZERO;
+        return ERROR_NUMBER_TOO_CLOSE_TO_ZERO;
     }
     if (x < 1.0 && x > 1.0 - epsilon * 10) {
-        return ERROR_TOO_CLOSE_TO_ONE;
+        return ERROR_NUMBER_TOO_CLOSE_TO_ONE;
     }
     if (x <= 0.0 || x >= 1.0) {
         return ERROR_INVALID_RANGE;

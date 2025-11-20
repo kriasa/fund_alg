@@ -1,14 +1,34 @@
 #include "base_conversion.h"
 #include <limits.h>
+#include <stddef.h> 
+
+#define UINT_MSB 0x80000000U
 
 static unsigned int is_zero(unsigned int n) {
-    return (n == 0) ? 1 : 0;
+    if (n==0){
+        return 1;
+    }
+    else{
+        return 0;
+    }
 }
 
 static unsigned int bitwise_less_than(unsigned int a, unsigned int b) {
-    unsigned int diff = a ^ b;
-    if (diff & b){
-        return 1;
+    unsigned int mask = UINT_MSB;
+    
+    while (mask != 0) {
+        unsigned int bit_a = a & mask;
+        unsigned int bit_b = b & mask;
+
+        if (!is_zero(bit_b) && is_zero(bit_a)) {
+            return 1;
+        }
+
+        if (!is_zero(bit_a) && is_zero(bit_b)) {
+            return 0;
+        }
+        
+        mask = mask >> 1;
     }
     return 0;
 }
@@ -21,7 +41,8 @@ static unsigned int bitwise_increment(unsigned int n) {
         unsigned int current_bit = n & bit;
         n = n ^ bit;
         carry = current_bit;
-        bit = bit << 1;
+        bit = (bit << 1); 
+        if (is_zero(bit)) break; 
     }
     return n;
 }
@@ -31,10 +52,10 @@ static unsigned int bitwise_decrement(unsigned int n) {
     while (m) {
         unsigned int borrow = (~n) & m;
         n = n ^ m;
-        if (borrow) {
-            m = m << 1;
+        if (is_zero(borrow)) {
+            break; 
         } else {
-            break;
+            m = (m << 1);
         }
     }
     return n;
@@ -42,32 +63,30 @@ static unsigned int bitwise_decrement(unsigned int n) {
 
 char digit_to_char(int digit) {
     static const char digits[] = "0123456789ABCDEFGHIJKLMNOPQRSTUV";
-    return digits[digit & 0x1F];
+    return digits[digit & 0x1F]; 
 }
+
 
 ConversionStatus decimal_to_base2r(int decimal_num, int r, char* result, size_t result_size) {
     if (result == NULL) {
         return CONV_ERR_NULL_PTR;
     }
-    
-    if ((r & 0xFFFFFFF8) != 0 || r == 0) {
+
+    if (bitwise_less_than(r, 1) || bitwise_less_than(5, r)) {
         return CONV_ERR_INVALID_BASE;
     }
-    
-    if (bitwise_less_than(result_size, 33)) {
+
+    if (bitwise_less_than(result_size, 34)) { 
         return CONV_ERR_BUFFER_TOO_SMALL;
     }
 
     int is_negative = 0;
     unsigned int num;
     
-    if (decimal_num < 0) {
+    if (decimal_num < 0) { 
         is_negative = 1;
-        if (decimal_num == INT_MIN) {
-            num = 2147483648U;
-        } else {
-            num = (unsigned int)(-decimal_num);
-        }
+        unsigned int N = (unsigned int)decimal_num; 
+        num = bitwise_increment(~N); 
     } else {
         num = (unsigned int)decimal_num;
     }
@@ -79,22 +98,26 @@ ConversionStatus decimal_to_base2r(int decimal_num, int r, char* result, size_t 
     } 
 
     unsigned int index = 0;
-    unsigned int base = 1U << r;
-    unsigned int mask = base - 1;  
-    char temp_buffer[32];
+    unsigned int base_2r = 1U << r;
+    unsigned int mask = bitwise_decrement(base_2r);
+    
+    char temp_buffer[32]; 
     unsigned int temp_index = 0;
 
     unsigned int temp_num = num;
     while (!is_zero(temp_num)) {
-        if (!bitwise_less_than(temp_index, 32)) {
-            return CONV_ERR_BUFFER_TOO_SMALL;
+        if (!bitwise_less_than(temp_index, 32)) { 
+            return CONV_ERR_OVERFLOW;
         }
-        
+
         unsigned int digit = temp_num & mask;
         temp_buffer[temp_index] = digit_to_char((int)digit);
-        temp_num = temp_num >> r;
+
+        temp_num = temp_num >> r; 
+        
         temp_index = bitwise_increment(temp_index);
     }
+    
     if (is_negative) {
         result[index] = '-';
         index = bitwise_increment(index);
@@ -104,9 +127,10 @@ ConversionStatus decimal_to_base2r(int decimal_num, int r, char* result, size_t 
 
     while (!is_zero(reverse_index)) {
         reverse_index = bitwise_decrement(reverse_index);
-        
-        if (!bitwise_less_than(index, result_size - 1)) {
-            return CONV_ERR_BUFFER_TOO_SMALL;
+        size_t result_size_minus_one = bitwise_decrement(result_size); 
+
+        if (is_zero(bitwise_less_than(index, result_size_minus_one))) {
+            return CONV_ERR_BUFFER_TOO_SMALL; 
         }
         
         result[index] = temp_buffer[reverse_index];

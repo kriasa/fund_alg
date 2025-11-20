@@ -4,6 +4,7 @@
 #include <string.h>
 #include <math.h>
 #include <ctype.h>
+
 const double EPS = 1e-8;
 
 error_code_t read_int(const char *prompt, int *value, int min_val, int max_val) {
@@ -70,7 +71,7 @@ const char* get_error_description(error_code_t error) {
     }
 }
 
-void print_simple_results(FractionResult* results, int count, int base) {
+void print_simple_results(FractionResult* results, int count) {
     printf("\n");
     for (int i = 0; i < count; i++) {
         printf("%d: ", i + 1);
@@ -128,7 +129,7 @@ int main() {
     );
 
     if (overall_error == SUCCESS && results != NULL) {
-        print_simple_results(results, count, B);
+        print_simple_results(results, count);
         free(results);
     } else {
         printf("Ошибка обработки\n");
