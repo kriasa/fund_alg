@@ -1,11 +1,29 @@
-This  is  a  very  long  line that should be split into multiple lines of eighty
-characters each to demonstrate the work of the text formatting program according
-to the laboratory requirements.
-Short line.
-Another  very  long  line  with  many words of different lengths for testing the
-algorithm of splitting text into fixed-length lines.
-Simple sentence.
-Another  very long line containing many different words and symbols that will be
-used  to  check  the  correctness  of  the  program when processing text data of
-different volume and structure.
-EOF
+This is a test file for checking the text formatting program. The program should
+process input text and format it to fit within specified line length.
+
+Programming  involves writing code in various languages like Python Java C++ and
+JavaScript. Developers create applications websites and systems.
+
+Artificial  intelligence  and  machine learning are important technologies. They
+help computers learn from data and make smart decisions.
+
+Cloud  computing  provides  flexible resources for businesses. Companies use AWS
+Azure and Google Cloud for their projects.
+
+This   text   contains  both  short  and  long  lines  to  test  the  formatting
+functionality  properly.  The  program  should  handle  different  line  lengths
+correctly.
+
+Web development includes frontend and backend work. HTML CSS JavaScript are used
+for creating user interfaces and user experiences.
+
+Cybersecurity protects against digital threats. Encryption and secure coding are
+essential for safety.
+
+The  quick brown fox jumps over the lazy dog. This sentence contains all letters
+of the English alphabet.
+
+Testing  is crucial for software quality. Developers write tests to ensure their
+code works correctly.
+
+Final line of test text.

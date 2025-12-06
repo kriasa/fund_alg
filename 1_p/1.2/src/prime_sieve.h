@@ -12,7 +12,6 @@ typedef enum {
     ERROR_INVALID_INPUT = 1,
     ERROR_MEMORY_ALLOCATION = 2,
     ERROR_OVERFLOW = 3,
-    ERROR_UNSUPPORTED_SIZE = 4
 } StatusCode;
 
 typedef struct {

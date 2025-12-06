@@ -5,12 +5,7 @@
 #define UINT_MSB 0x80000000U
 
 static unsigned int is_zero(unsigned int n) {
-    if (n==0){
-        return 1;
-    }
-    else{
-        return 0;
-    }
+    return n==0;
 }
 
 static unsigned int bitwise_less_than(unsigned int a, unsigned int b) {

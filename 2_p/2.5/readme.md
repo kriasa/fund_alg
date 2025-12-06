@@ -1,0 +1,4 @@
+Запуск
+
+make
+./build/main

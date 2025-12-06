@@ -5,7 +5,7 @@
 
 #define BUFFER_SIZE 100
 
-static void handle_input_error(StatusCode status, unsigned int max_limit, const char *field_name) {
+static void handle_input_error(StatusCode status) {
     switch (status) {
         case ERROR_INVALID_INPUT:
             printf("некорректный ввод\n");
@@ -13,28 +13,41 @@ static void handle_input_error(StatusCode status, unsigned int max_limit, const 
         case ERROR_OVERFLOW:
             printf("не входит в диапазон\n");
             break;
-        case ERROR_UNSUPPORTED_SIZE:
-            printf("%s превышает ограничение - максимум: %u\n", field_name, max_limit);
-            break;
         default:
             printf("ERROR\n");
             break;
     }
 }
+
 char* read_line(void) {
     char buffer[BUFFER_SIZE];
-    if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
-        return NULL;
-    }
-    size_t len = strlen(buffer);
-    if (len > 0 && buffer[len - 1] == '\n') {
-        buffer[len - 1] = '\0';
-    }
-    char *result = (char*)malloc(len + 1);
-    if (result == NULL) {
-        return NULL;
-    }
-    strcpy(result, buffer);
+    char *result = NULL;
+    size_t total_len = 0;
+    int reached_newline = 0;
+    
+    do {
+        if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
+            break;
+        }
+        
+        size_t chunk_len = strlen(buffer);
+        if (chunk_len > 0 && buffer[chunk_len - 1] == '\n') {
+            buffer[chunk_len - 1] = '\0';
+            chunk_len--;
+            reached_newline = 1;
+        }
+        char *new_result = realloc(result, total_len + chunk_len + 1);
+        if (new_result == NULL) {
+            free(result);
+            return NULL;
+        }
+        
+        result = new_result;
+        strcpy(result + total_len, buffer);
+        total_len += chunk_len;
+        
+    } while (!reached_newline);
+    
     return result;
 }
 
@@ -58,7 +71,7 @@ unsigned int read_queries_count(void) {
         if (status == SUCCESS) {
             return t;
         } else {
-            handle_input_error(status, MAX_SUPPORTED_QUERIES, field);
+            handle_input_error(status);
         }
     }
 }
@@ -83,7 +96,7 @@ unsigned int read_prime_index(unsigned int query_num) {
         if (status == SUCCESS) {
             return n;
         } else {
-            handle_input_error(status, MAX_SUPPORTED_PRIME_INDEX, field);
+            handle_input_error(status);
         }
     }
 }
@@ -108,16 +121,17 @@ int main(void) {
     StatusCode status = sieve_init(&sieve, max_query);
     
     if (status != SUCCESS) {
-        if (status == ERROR_UNSUPPORTED_SIZE) {
+        if (status == ERROR_OVERFLOW) {
             printf("запрос %u невозможен\n", max_query);
         } else if (status == ERROR_MEMORY_ALLOCATION) {
-            printf("недостаточно памяти");
+            printf("недостаточно памяти\n");
         } else {
             printf("ошибка инициализации решета\n");
         }
         free(queries);
         return EXIT_FAILURE;
     }
+    
     for (unsigned int i = 0; i < t; i++) {
         unsigned int prime;
         status = sieve_get_nth_prime(&sieve, queries[i], &prime);
@@ -128,6 +142,7 @@ int main(void) {
             printf("не удалось найти %u-е простое число\n", queries[i]);
         }
     }
+    
     sieve_free(&sieve);
     free(queries);
 

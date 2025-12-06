@@ -17,10 +17,6 @@ void *my_memchr(const void *str, int c, size_t n, error_code_t *error) {
         if (error) *error = ERROR_NULL_POINTER;
         return NULL;
     }
-    if (c < 0 || c > 255) {
-        if (error) *error = ERROR_INVALID_INPUT;
-        return NULL;
-    }
     
     const unsigned char *ptr = (const unsigned char *)str;
     unsigned char uc = (unsigned char)c;
@@ -34,6 +30,7 @@ void *my_memchr(const void *str, int c, size_t n, error_code_t *error) {
     if (error) *error = ERROR_NOT_FOUND;
     return NULL;
 }
+
 void *my_memcpy(void *dest, const void *src, size_t n, error_code_t *error) {
     if (error) *error = SUCCESS;
     
@@ -243,6 +240,7 @@ size_t my_strlen(const char *str, error_code_t *error) {
     
     return ptr - str;
 }
+
 char *my_strpbrk(const char *str1, const char *str2, error_code_t *error) {
     if (error) *error = SUCCESS;
     
@@ -297,6 +295,7 @@ char *my_strrchr(const char *str, int c, error_code_t *error) {
 }
 
 char *my_strstr(const char *haystack, const char *needle, error_code_t *error) {
+
     if (error) *error = SUCCESS;
     
     if (haystack == NULL || needle == NULL) {
@@ -321,9 +320,11 @@ char *my_strstr(const char *haystack, const char *needle, error_code_t *error) {
     if (error) *error = ERROR_NOT_FOUND;
     return NULL;
 }
-static char *strtok_save = NULL;
+
 
 char *my_strtok(char *str, const char *delim, error_code_t *error) {
+    static char *strtok_save = NULL;
+
     if (error) *error = SUCCESS;
     
     if (delim == NULL) {

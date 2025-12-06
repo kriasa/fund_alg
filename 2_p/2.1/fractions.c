@@ -9,10 +9,15 @@ long long gcd(long long a, long long b) {
     a = llabs(a);
     b = llabs(b);
 
-    if (a == 0 && b == 0) return 1;
-    if (a == 0) return b;
-    if (b == 0) return a;
-    
+    if (a == 0 && b == 0){ 
+        return 1;
+    }
+    if (a == 0){ 
+        return b;
+    }
+    if (b == 0){ 
+        return a;
+    }
     while (b != 0) {
         long long temp = b;
         b = a % b;
@@ -28,8 +33,10 @@ error_code_t continued_fractions_conversion(double x, Rational *result, double e
     }
 
     long long a, h1, h2, k1, k2;
-    h1 = 0; h2 = 1;
-    k1 = 1; k2 = 0;
+    h1 = 0; 
+    h2 = 1;
+    k1 = 1; 
+    k2 = 0;
     
     double r = x;
     const int max_iterations = 20;
@@ -52,8 +59,10 @@ error_code_t continued_fractions_conversion(double x, Rational *result, double e
             return SUCCESS;
         }
         
-        h1 = h2; h2 = h;
-        k1 = k2; k2 = k;
+        h1 = h2; 
+        h2 = h;
+        k1 = k2; 
+        k2 = k;
         
         if (fabs(r - a) < epsilon) break;
         r = 1.0 / (r - a);

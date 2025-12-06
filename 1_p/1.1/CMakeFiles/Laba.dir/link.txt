@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/Laba.dir/main.c.o CMakeFiles/Laba.dir/function.c.o -o Laba 

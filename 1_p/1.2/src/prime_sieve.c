@@ -5,11 +5,11 @@
 #include <limits.h>
 #include <math.h>
 
-static size_t estimate_sieve_limit(size_t max_prime_index) {
-    if (max_prime_index == 0) return 0;
-    if (max_prime_index == 1) return 2;
-    if (max_prime_index == 2) return 3;
-    if (max_prime_index <= 6) return 13;
+size_t estimate_sieve_limit(size_t max_prime_index) {
+
+    if (max_prime_index == 1){ 
+        return 2;
+    }
     
     double n_double = (double)max_prime_index;
     double log_n = log(n_double);
@@ -17,13 +17,11 @@ static size_t estimate_sieve_limit(size_t max_prime_index) {
     
     double estimate = n_double * (log_n + log_log_n - 1.0);
     size_t limit = (size_t)(estimate * 1.20) + 1000;
+
     if (limit > 200000000) {
         limit = 200000000;
     }
-    if (limit < max_prime_index * 2) {
-        limit = max_prime_index * 2;
-    }
-    
+
     return limit;
 }
 
@@ -33,14 +31,10 @@ StatusCode sieve_init(PrimeSieve *sieve, size_t max_prime_index) {
     }
 
     if (max_prime_index > MAX_SUPPORTED_PRIME_INDEX) {
-        return ERROR_UNSUPPORTED_SIZE;
+        return ERROR_OVERFLOW;
     }
 
     size_t estimated_limit = estimate_sieve_limit(max_prime_index);
-    if (estimated_limit == 0) {
-        return ERROR_UNSUPPORTED_SIZE;
-    }
-
     if (estimated_limit > SIZE_MAX / sizeof(unsigned char)) {
         return ERROR_MEMORY_ALLOCATION;
     }
@@ -75,7 +69,7 @@ StatusCode sieve_init(PrimeSieve *sieve, size_t max_prime_index) {
     if (sieve->primes_count < max_prime_index) {
         free(sieve->sieve);
         sieve->sieve = NULL;
-        return ERROR_UNSUPPORTED_SIZE;
+        return ERROR_OVERFLOW;
     }
 
     sieve->primes = (unsigned int*)malloc(sieve->primes_count * sizeof(unsigned int));
@@ -122,7 +116,7 @@ StatusCode sieve_get_nth_prime(const PrimeSieve *sieve, unsigned int n, unsigned
     *result = sieve->primes[n - 1];
     return SUCCESS;
 }
-
+// const char const*input
 StatusCode validate_input_with_limit(const char *input, unsigned int *value, 
                                    unsigned int max_value, const char *field_name) {
     if (input == NULL || value == NULL || field_name == NULL) {
@@ -153,7 +147,7 @@ StatusCode validate_input_with_limit(const char *input, unsigned int *value,
     }
 
     if (*value > max_value) {
-        return ERROR_UNSUPPORTED_SIZE;
+        return ERROR_OVERFLOW;
     }
 
     return SUCCESS;

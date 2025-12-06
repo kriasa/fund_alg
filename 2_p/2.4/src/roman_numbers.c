@@ -68,41 +68,35 @@ scanf_status_t parse_roman_number(const char* str, int* result, int* const consu
             return ROMAN_INVALID_SEQUENCE;
         }
 
-        // 1. Проверка порядка
         if (matched_token->value > prev_value) {
             *consumed_chars = (int)(ptr - start_ptr);
             return ROMAN_INVALID_SEQUENCE;
         }
 
-        // 2. Запрет вычитания после V, L, D
         if (matched_token->is_subtractive && (prev_value == 5 || prev_value == 50 || prev_value == 500)) {
             *consumed_chars = (int)(ptr - start_ptr);
             return ROMAN_INVALID_SEQUENCE;
         }
-       
-        // 3. ПРОВЕРКА ВЫЧИТАНИЯ: после вычитающей пары нельзя ставить символы того же разряда
+
         if (was_subtractive) {
-            // Простая логика: после IX/IV нельзя I или V
+
             if ((prev_value == 9 || prev_value == 4) &&
                 (matched_token->symbol[0] == 'I' || matched_token->symbol[0] == 'V')) {
                 *consumed_chars = (int)(ptr - start_ptr);
                 return ROMAN_INVALID_SEQUENCE;
             }
-            // После XC/XL нельзя X или L
             if ((prev_value == 90 || prev_value == 40) &&
                 (matched_token->symbol[0] == 'X' || matched_token->symbol[0] == 'L')) {
                 *consumed_chars = (int)(ptr - start_ptr);
                 return ROMAN_INVALID_SEQUENCE;
             }
-            // После CM/CD нельзя C или D
             if ((prev_value == 900 || prev_value == 400) &&
                 (matched_token->symbol[0] == 'C' || matched_token->symbol[0] == 'D')) {
                 *consumed_chars = (int)(ptr - start_ptr);
                 return ROMAN_INVALID_SEQUENCE;
             }
         }
-       
-        // 4. V, L, D: проверка на повторное использование
+
         if (strchr(matched_token->symbol, 'V') || strchr(matched_token->symbol, 'v')) {
             if (v_used) {
                 *consumed_chars = (int)(ptr - start_ptr);
@@ -125,7 +119,6 @@ scanf_status_t parse_roman_number(const char* str, int* result, int* const consu
             d_used = true;
         }
 
-        // 5. Повторение I, X, C, M
         if (!matched_token->is_subtractive) {
             char current_base_char = matched_token->symbol[0];
            
@@ -150,8 +143,7 @@ scanf_status_t parse_roman_number(const char* str, int* result, int* const consu
             last_repeatable_char = '\0';
             char_repeat_count = 0;
         }
-       
-        // 6. Проверка переполнения
+
         if ((long)total + matched_token->value > INT_MAX) {
             *consumed_chars = (int)(ptr - start_ptr);
             return ROMAN_OVERFLOW;
